@@ -1,0 +1,113 @@
+version: '3.9'
+
+# ========================================
+# DOCKER COMPOSE - BIKE GEOLOC
+# ========================================
+# Development and production environments
+# Usage:
+#   Development: docker-compose up app-dev
+#   Production: docker-compose up app-prod
+
+services:
+  # -----------------------------------------
+  # APP DEV - Development server with hot reload
+  # -----------------------------------------
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: bike-geoloc-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_APP_ENV=development
+      - VITE_LOG_LEVEL=debug
+      - VITE_LOG_PRETTY=true
+    networks:
+      - bike-network
+    command: npm run dev
+
+  # -----------------------------------------
+  # APP PROD - Production build with nginx
+  # -----------------------------------------
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: bike-geoloc-prod
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - bike-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # -----------------------------------------
+  # REDIS - Cache optionnel pour proxy API futur
+  # -----------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: bike-geoloc-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - bike-network
+
+  # -----------------------------------------
+  # REDIS COMMANDER - UI pour débugger le cache
+  # -----------------------------------------
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: bike-geoloc-redis-ui
+    ports:
+      - '8081:8081'
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - bike-network
+
+  # -----------------------------------------
+  # NGINX - Proxy CORS (si API CityBikes bloque)
+  # -----------------------------------------
+  # Décommenter si besoin de contourner les restrictions CORS
+  # nginx-proxy:
+  #   image: nginx:alpine
+  #   container_name: bike-geoloc-proxy
+  #   ports:
+  #     - '8080:80'
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   restart: unless-stopped
+  #   networks:
+  #     - bike-network
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  bike-network:
+    driver: bridge
