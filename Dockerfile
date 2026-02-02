@@ -68,6 +68,7 @@ RUN addgroup -g 1001 -S nginx-app && \
     chown -R nginx-app:nginx-app /usr/share/nginx/html && \
     chown -R nginx-app:nginx-app /var/cache/nginx && \
     chown -R nginx-app:nginx-app /var/log/nginx && \
+    chown -R nginx-app:nginx-app /etc/nginx && \
     touch /var/run/nginx.pid && \
     chown nginx-app:nginx-app /var/run/nginx.pid
 
