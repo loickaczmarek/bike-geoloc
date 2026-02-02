@@ -52,7 +52,7 @@ export function GeolocationButton({
     immediate: autoTrigger,
     maxAccuracy,
     onSuccess: (result) => {
-      logger.info('GeolocationButton onSuccess, calling onPositionReceived', result.coords)
+      logger.info('GeolocationButton onSuccess, calling onPositionReceived', { ...result.coords })
       onPositionReceived?.(result.coords)
     },
   })

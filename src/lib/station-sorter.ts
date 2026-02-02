@@ -30,6 +30,7 @@ export type SortType =
   | 'bikes'
   | 'slots'
   | 'name'
+  | 'priority'
 
 /**
  * Ordre de tri (ascendant ou descendant)

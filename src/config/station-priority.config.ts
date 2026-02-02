@@ -209,7 +209,7 @@ export function calculateDistanceScore(
       return range.score
     }
   }
-  return config.ranges[config.ranges.length - 1].score
+  return config.ranges[config.ranges.length - 1]?.score ?? 0
 }
 
 /**
@@ -220,7 +220,7 @@ export function calculateBikeScore(
   config: BikeScoreRanges = DEFAULT_PRIORITY_CONFIG.bikeScoring
 ): number {
   // Trouver le range approprié (dernier seuil dépassé)
-  let score = config.ranges[0].score
+  let score = config.ranges[0]?.score ?? 0
 
   for (const range of config.ranges) {
     if (bikeCount >= range.threshold) {

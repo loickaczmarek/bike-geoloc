@@ -24,7 +24,7 @@ import { config } from '@/config/env.config'
  * Applies OWASP recommended headers to all responses
  */
 export function securityHeadersMiddleware(
-  req: IncomingMessage,
+  _req: IncomingMessage,
   res: ServerResponse,
   next: () => void
 ): void {

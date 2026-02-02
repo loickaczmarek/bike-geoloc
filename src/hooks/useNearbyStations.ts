@@ -43,7 +43,7 @@ import { fetchNetworkDetails } from '@/services/citybikes-api.service'
 import { filterStations } from '@/lib/station-filter'
 import { sortAndLimit } from '@/lib/station-sorter'
 import { logger } from '@/middleware/logger'
-import { handleError, BikeGeolocError } from '@/middleware/error-handler'
+import { BikeGeolocError } from '@/middleware/error-handler'
 import type { Coordinates } from '@/types/geolocation.types'
 import type { NearbyStationsResult, StationWithDistance } from '@/types/station.types'
 
@@ -96,7 +96,7 @@ interface UseNearbyStationsReturn {
 export function useNearbyStations(
   options: UseNearbyStationsOptions = {}
 ): UseNearbyStationsReturn {
-  logger.info('🔍 useNearbyStations hook called', options)
+  logger.info('🔍 useNearbyStations hook called', { ...options })
 
   const {
     userLocation,

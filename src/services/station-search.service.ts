@@ -21,7 +21,7 @@ import { sortAndLimit } from '@/lib/station-sorter'
 import { validateCoordinates } from '@/lib/validators/coordinate-validator'
 import { logger } from '@/middleware/logger'
 import type { Coordinates } from '@/types/geolocation.types'
-import type { StationWithDistance, NearbyStationsResult } from '@/types/station.types'
+import type { NearbyStationsResult } from '@/types/station.types'
 
 /**
  * Options de recherche de stations
