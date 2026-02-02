@@ -34,7 +34,7 @@ import {
   isGeolocationAvailable,
 } from '@/services/geolocation.service'
 import { logger } from '@/middleware/logger'
-import type { BikeGeolocError } from '@/middleware/error-handler'
+import { BikeGeolocError, ErrorType } from '@/middleware/error-handler'
 import type {
   GeolocationResult,
   GeolocationStatus,
@@ -173,13 +173,12 @@ export function useGeolocation(
 
         // Validation de la précision si requise
         if (maxAccuracy && result.accuracy > maxAccuracy) {
-          const accuracyError = {
-            type: 'VALIDATION' as const,
-            message: `GPS accuracy too low: ${result.accuracy}m (max: ${maxAccuracy}m)`,
-            userMessage: `⚠️ Précision GPS insuffisante (${Math.round(result.accuracy)}m). Veuillez réessayer.`,
-            timestamp: new Date().toISOString(),
-            context: { accuracy: result.accuracy, maxAccuracy },
-          } as BikeGeolocError
+          const accuracyError = new BikeGeolocError(
+            ErrorType.VALIDATION,
+            `GPS accuracy too low: ${result.accuracy}m (max: ${maxAccuracy}m)`,
+            `⚠️ Précision GPS insuffisante (${Math.round(result.accuracy)}m). Veuillez réessayer.`,
+            { accuracy: result.accuracy, maxAccuracy }
+          )
 
           setError(accuracyError)
           setStatus('error')
@@ -192,7 +191,7 @@ export function useGeolocation(
         }
 
         // Succès
-        logger.info('Setting position state', result)
+        logger.info('Setting position state', { ...result })
         setPosition(result)
         logger.info('Position state set, setting status to success')
         setStatus('success')

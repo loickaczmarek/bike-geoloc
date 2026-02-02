@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -61,6 +66,7 @@ export default defineConfig({
   envPrefix: 'VITE_',
 
   // Configuration de test (Vitest)
+  // @ts-expect-error - test config is valid for vitest but not recognized by vite types
   test: {
     globals: true,
     environment: 'jsdom',

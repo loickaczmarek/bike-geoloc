@@ -12,6 +12,7 @@ import { StationList } from '@/components/StationList'
 import { useNearbyStations } from '@/hooks/useNearbyStations'
 import { logger } from '@/middleware/logger'
 import type { Coordinates } from '@/types/geolocation.types'
+import type { NearbyStationsResult } from '@/types/station.types'
 
 function App() {
   logger.info('🚀 App component rendering')
@@ -25,7 +26,7 @@ function App() {
   })
 
   // Callback de succès de recherche
-  const handleSearchSuccess = useCallback((searchResult) => {
+  const handleSearchSuccess = useCallback((searchResult: NearbyStationsResult) => {
     logger.info('Search completed', {
       stationsFound: searchResult.stations.length,
       network: searchResult.networkName,
@@ -51,7 +52,7 @@ function App() {
 
   // Handler appelé quand la position est reçue
   const handlePositionReceived = useCallback((coords: Coordinates) => {
-    logger.info('Position received in App', coords)
+    logger.info('Position received in App', { ...coords })
     setUserPosition(coords)
   }, [])
 

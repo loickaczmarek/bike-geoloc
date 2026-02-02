@@ -12,7 +12,7 @@
  */
 
 import type { RefreshState, DataFreshness, RefreshStatus } from '@/lib/domain/RefreshState'
-import { DataFreshness as FreshnessEnum, RefreshStatus as StatusEnum } from '@/lib/domain/RefreshState'
+import { DataFreshness as FreshnessEnum } from '@/lib/domain/RefreshState'
 
 export interface FreshnessBadge {
   text: string

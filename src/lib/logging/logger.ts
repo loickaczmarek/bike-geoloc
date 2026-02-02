@@ -312,7 +312,7 @@ export function createLogger(prefix: string): Logger {
  * Middleware to add correlation ID to requests
  */
 export function withCorrelationId<T>(fn: () => T): T {
-  const correlationId = logger.generateCorrelationId()
+  logger.generateCorrelationId()
 
   try {
     return fn()
@@ -325,7 +325,7 @@ export function withCorrelationId<T>(fn: () => T): T {
  * Async middleware to add correlation ID to requests
  */
 export async function withCorrelationIdAsync<T>(fn: () => Promise<T>): Promise<T> {
-  const correlationId = logger.generateCorrelationId()
+  logger.generateCorrelationId()
 
   try {
     return await fn()
